@@ -75,6 +75,8 @@ details{padding:.25rem .7rem;border:1px solid var(--border);border-radius:.6rem;
 .stars{display:flex;justify-content:center;gap:.5rem;margin:.5rem 0 1rem}
 .star{display:grid;place-items:center;width:2.9rem;height:2.9rem;border:2px solid #526B7D;border-radius:50%;background:#fff;font-size:1.65rem}.star.on{background:#F5E8B5;border-color:#6B5411;color:#453709}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.big-link{display:inline-block;min-height:48px;padding:.9rem 2.2rem;border-radius:999px;background:var(--ink);color:#fff;font-size:1.25rem;font-weight:700;text-decoration:none;touch-action:manipulation}
+.big-link:hover{background:var(--btn-h)}
 .win{padding-top:10vh}.trophy{font-size:5rem;line-height:1}.win h1{color:var(--btn)}.winmsg{font-size:1.3rem;max-width:30rem;margin:1rem auto 1.6rem}
 @media(max-width:560px){:root{font-size:16px}#exitBtn{padding-inline:.8rem;font-size:.85rem}.top h2{display:none}.reading-bar button{flex:1 1 0;min-width:0;padding-inline:.4rem;font-size:.85rem}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
@@ -198,6 +200,7 @@ details{padding:.25rem .7rem;border:1px solid var(--border);border-radius:.6rem;
   <div class="trophy" aria-hidden="true">🌟</div>
   <h1 id="winH" tabindex="-1">¡Felicitaciones!</h1>
   <p class="winmsg">¡Leíste el cuento sin errores! Eres un gran lector.<br>Pasaste a la siguiente estación: <strong>preguntas dialogadas</strong>.</p>
+  <a class="big-link" id="toStation3" href="https://anthophilael-oss.github.io/estacion-3-preguntas/">Continuar a estación 3 preguntas dialogadas</a>
 </section>
 <p id="live" class="sr-only" role="status" aria-live="polite"></p>
 </main>
