@@ -78,6 +78,13 @@ details{padding:.25rem .7rem;border:1px solid var(--border);border-radius:.6rem;
 .win{padding-top:10vh}.trophy{font-size:5rem;line-height:1}.win h1{color:var(--btn)}.winmsg{font-size:1.3rem;max-width:30rem;margin:1rem auto 1.6rem}
 @media(max-width:560px){:root{font-size:16px}#exitBtn{padding-inline:.8rem;font-size:.85rem}.top h2{display:none}.reading-bar button{flex:1 1 0;min-width:0;padding-inline:.4rem;font-size:.85rem}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* fix imágenes: se muestran completas, sin recortes */
+.slot:not(.empty){height:auto}
+.slot img{width:auto;height:auto;max-width:100%;object-fit:contain;display:block}
+.logo-slot img{max-height:9rem}
+.tutor-slot img{max-height:min(22rem,80vw)}
+.cover-slot:not(.empty){width:fit-content;max-width:100%}
+.cover-slot img{max-height:min(55vh,32rem)}
 </style>
 </head>
 <body>
