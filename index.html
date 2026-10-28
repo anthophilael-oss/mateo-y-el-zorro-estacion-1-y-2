@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lectura repetida ANCLA-TEA</title>
+<style>
+:root{--page:#FFF8EC;--paper:#fff;--ink:#2C3E50;--muted:#52616B;--border:#C9B99A;--focus:#124F82;--active:#E8F2FA;--active-b:#17649A;--ok:#205C3A;--ok-bg:#E8F4EC;--err:#7D2924;--err-bg:#F8ECEA;--btn:#164F78;--btn-h:#103E60;--sun:#F6B93B;--teal:#2A9D8F;
+font-family:"Trebuchet MS",Verdana,Arial,sans-serif;font-size:18px;line-height:1.55;color:var(--ink);background:var(--page)}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;min-width:320px}
+button{font:inherit;min-height:48px;padding:.7rem 1.2rem;border:2px solid transparent;border-radius:999px;background:var(--btn);color:#fff;font-weight:700;cursor:pointer;touch-action:manipulation}
+button:hover:not(:disabled){background:var(--btn-h)}button:disabled{opacity:.5;cursor:not-allowed}
+button.secondary{background:#fff;color:var(--ink);border-color:#526B7D}button.secondary:hover:not(:disabled){background:#EAF0F4}
+button.success{background:var(--ok)}button.danger{background:var(--err)}
+button.big{font-size:1.25rem;padding:.9rem 2.2rem;background:var(--ink)}
+:focus-visible{outline:3px solid var(--focus);outline-offset:3px}
+h1,h2{line-height:1.2;margin:0 0 .6rem}h1{font-size:clamp(1.8rem,5vw,2.8rem)}h2{font-size:clamp(1.4rem,3.5vw,2rem)}
+.shell{width:min(100% - 1.5rem,60rem);margin:0 auto}
+.screen{padding:1.2rem 0 2rem;text-align:center}
+.panel{padding:clamp(1rem,3vw,1.5rem);background:var(--paper);border:2px solid var(--border);border-radius:1.2rem;box-shadow:0 3px 10px rgb(44 62 80/8%)}
+.slot{display:grid;place-items:center;overflow:hidden;margin-inline:auto}
+.slot img{width:100%;height:100%;object-fit:contain}
+.slot.empty{border:3px dashed var(--border);background:#fff;color:var(--muted);font-size:.95rem;font-weight:700;line-height:1.3;padding:.6rem;text-align:center;border-radius:1.2rem}
+.slot.empty small{display:block;font-weight:400;font-size:.8rem}
+.slot.empty .ph{font-size:2.6rem;line-height:1}
+.logo-slot{width:min(18rem,80vw);height:6rem;margin-bottom:.6rem}
+.tutor-slot{width:min(16rem,70vw);height:min(16rem,70vw);margin-block:.4rem}
+.home{display:flex;flex-direction:column;align-items:center;padding:1.2rem 1rem 2rem;margin-top:.8rem;background:linear-gradient(#FFF1CC,#FFF8EC 60%);border:2px solid var(--border);border-radius:1.6rem}
+.hello{font-size:clamp(1.7rem,5.5vw,2.6rem);line-height:1.3;color:var(--btn);margin:.2rem 0 1rem}
+.bubble{position:relative;max-width:34rem;margin:1rem auto 1.4rem;padding:1rem 1.4rem;background:#fff;border:3px solid var(--sun);border-radius:1.4rem;font-size:1.2rem;line-height:1.75;text-align:center}
+.bubble .msg{margin:0 0 1.1rem;letter-spacing:.01em}.bubble .station{font-size:1.3rem;font-weight:700;color:var(--ink)}.bubble .msg:last-child{margin-bottom:0;font-weight:700;color:var(--btn)}
+.bubble::before{content:"";position:absolute;top:-14px;left:50%;width:22px;height:22px;background:#fff;border-left:3px solid var(--sun);border-top:3px solid var(--sun);transform:translateX(-50%) rotate(45deg)}
+.cover{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;padding:1rem .5rem}
+.cover-slot{width:min(100%,48rem);height:min(48vh,30rem);margin-block:0 1.6rem;border-radius:1rem}
+.cover-slot .fallback{font-size:7rem;line-height:1}
+.cover h2{font-size:clamp(1.7rem,5vw,2.5rem);line-height:1.3;color:var(--btn);margin:0 0 .7rem}
+.cover .sub{margin:0 0 1.4rem;font-size:1.2rem;line-height:1.7;color:var(--muted)}
+.cover .slot:not(.empty){background:#fff;border:3px solid var(--sun);border-radius:1.2rem;padding:.5rem;box-shadow:0 4px 14px rgb(44 62 80/12%)}
+.ask{font-size:clamp(1.4rem,4vw,2rem);font-weight:700;line-height:1.35;margin:0 0 1.2rem}
+.top{display:flex;align-items:center;gap:.8rem;justify-content:space-between;padding-block:.5rem}
+.top .logoImg{height:2.6rem;max-width:8rem;object-fit:contain}
+/* flujograma */
+.flow{list-style:none;margin:1rem auto;padding:0;max-width:34rem}
+.step{position:relative;display:flex;gap:.9rem;align-items:center;text-align:left;padding:.8rem 1rem;border-radius:1.1rem;border:3px solid var(--c);background:#fff}
+.step .ico{flex:none;display:grid;place-items:center;width:3.4rem;height:3.4rem;border-radius:50%;background:var(--c);font-size:1.8rem}
+.step b{display:block;font-size:1.1rem}.step small{color:var(--muted);font-size:.85rem}
+.arrow{display:block;text-align:center;font-size:1.6rem;line-height:1.3;color:var(--muted)}
+.branch{display:grid;grid-template-columns:1fr 1fr;gap:.6rem;margin-top:.6rem}
+.chip{padding:.5rem;border-radius:.8rem;font-size:.9rem;font-weight:700;text-align:center}
+.chip.yes{background:var(--err-bg);color:var(--err)}.chip.no{background:var(--ok-bg);color:var(--ok)}
+/* menu */
+.stories{display:grid;grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));gap:1rem;margin:1.2rem 0}
+.story{display:flex;flex-direction:column;gap:.3rem;align-items:center;min-height:11rem;padding:1rem;border:3px solid var(--border);border-radius:1.2rem;background:#fff;color:var(--ink);font-weight:400;line-height:1.35}
+.story:hover:not(:disabled){background:#FFF3D6}.story[aria-pressed=true]{border-color:var(--active-b);background:var(--active);box-shadow:0 0 0 3px var(--active-b)}
+.story .ico{font-size:3rem}.story strong{font-size:1.15rem}.story span{font-size:.88rem;color:var(--muted)}
+.nav{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center;margin-top:1rem}
+/* lectura */
+.reading-card{min-height:12rem;text-align:left}
+.plabel{margin:0 0 1rem;color:var(--muted);font-weight:700;font-size:1rem}
+.reading-template{min-height:7rem;font-size:clamp(1.6rem,3.6vw,2.2rem);font-weight:600;line-height:1.65;overflow-wrap:anywhere}
+.segment{padding:.08em .13em;border:2px solid transparent;border-radius:.35em}
+.segment.past,.segment.future{visibility:hidden;padding:0;border:0}
+.segment.active{background:var(--active);border:3px solid var(--active-b);font-weight:700;color:#173B55}
+.tutor{margin-top:.6rem;display:grid;gap:.4rem;text-align:left}
+.metrics{display:flex;flex-wrap:wrap;gap:.4rem}.metric{padding:.2rem .6rem;border:1px solid var(--border);border-radius:.6rem;background:#FFFCF5;font-size:.9rem;font-weight:700}
+.feedback{min-height:2.2rem;margin:0;padding:.35rem .7rem;border-left:4px solid #526B7D;background:#F7F9FA}
+.feedback.error{border-color:var(--err);background:var(--err-bg);color:#64221D}.feedback.success{border-color:var(--ok);background:var(--ok-bg);color:#19482F}
+.actions{display:flex;flex-wrap:wrap;gap:.7rem;justify-content:center}
+.reading-bar{position:fixed;inset:auto 0 0 0;z-index:20;padding:.55rem .6rem calc(.55rem + env(safe-area-inset-bottom,0px));background:#fff;border-top:2px solid #8797A2;box-shadow:0 -3px 12px rgb(44 62 80/16%)}
+.reading-bar button{flex:0 1 15rem}
+body.reading main{padding-bottom:6.5rem}
+details{padding:.25rem .7rem;border:1px solid var(--border);border-radius:.6rem;background:#FFFCF5}summary{min-height:40px;padding-block:.35rem;cursor:pointer;font-weight:700}
+.drill-word{margin:1.2rem auto;padding:1.2rem 1rem;background:var(--active);border:3px solid var(--active-b);border-radius:1rem;font-size:clamp(2rem,8vw,4rem);font-weight:700;line-height:1.25;color:#173B55;overflow-wrap:anywhere}
+.stars{display:flex;justify-content:center;gap:.5rem;margin:.5rem 0 1rem}
+.star{display:grid;place-items:center;width:2.9rem;height:2.9rem;border:2px solid #526B7D;border-radius:50%;background:#fff;font-size:1.65rem}.star.on{background:#F5E8B5;border-color:#6B5411;color:#453709}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+.win{padding-top:10vh}.trophy{font-size:5rem;line-height:1}.win h1{color:var(--btn)}.winmsg{font-size:1.3rem;max-width:30rem;margin:1rem auto 1.6rem}
+@media(max-width:560px){:root{font-size:16px}#exitBtn{padding-inline:.8rem;font-size:.85rem}.top h2{display:none}.reading-bar button{flex:1 1 0;min-width:0;padding-inline:.4rem;font-size:.85rem}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main id="main" class="shell">
+
+<!-- 1. INICIO -->
+<section id="s-home" class="screen home" aria-labelledby="homeH">
+  <div class="slot logo-slot empty" id="logoSlot"><div><span class="ph" aria-hidden="true">🏫</span><br>Aquí va tu logo<small>logo.png</small></div></div>
+  <div class="slot tutor-slot empty" id="tutorSlot"><div><span class="ph" aria-hidden="true">🧑‍🏫</span><br>Aquí va la foto del tutor<small>tutor.png</small></div></div>
+  <div class="bubble">
+    <h1 id="homeH" class="hello">¡Hola, explorador! 👋</h1>
+    <p class="msg station">¡Bienvenido a la estación uno y dos! 🚉</p>
+    <p class="msg">Tengo una sorpresa para ti: ¡un cuento lleno de aventuras nos espera! 📖✨</p>
+    <p class="msg">¿Quién será el personaje? ¿Qué le pasará? Vamos a descubrirlo juntos, ¡con cada lectura mejorarás!</p>
+    <p class="msg">Eres capaz de grandes cosas. 🌟</p>
+  </div>
+  <button class="big" type="button" id="toGuide">Indicaciones</button>
+</section>
+
+<!-- 1b. CAMINO (guía) -->
+<section id="s-guide" class="screen" hidden aria-labelledby="guideH">
+  <div class="top"><button class="secondary" type="button" id="guideBack">← Volver</button><img class="logoImg" alt="" hidden></div>
+  <h2 id="guideH" tabindex="-1">¡Mira lo que vamos a hacer hoy! 🚀</h2>
+  <p class="sub" style="color:var(--muted);margin:0 0 .6rem">Seguiremos este camino paso a paso. ¡Tú puedes!</p>
+  <ol class="flow">
+    <li class="step" style="--c:#CFE8F7"><span class="ico" aria-hidden="true">👀</span><div><b>1. Miramos la portada</b><small>Observamos y pensamos de qué trata · 2 a 3 min</small></div></li>
+    <li class="arrow" aria-hidden="true">⬇</li>
+    <li class="step" style="--c:#FFE3A3"><span class="ico" aria-hidden="true">📖</span><div><b>2. Leemos con tarjetitas</b><small>Leemos el cuento 3 o 4 veces, ¡cada vez mejor! · 6 a 8 min</small></div></li>
+    <li class="arrow" aria-hidden="true">⬇</li>
+    <li class="step" style="--c:#E6D5F5;display:block;text-align:center"><div style="display:flex;gap:.9rem;align-items:center;text-align:left"><span class="ico" aria-hidden="true" style="background:#E6D5F5">🤔</span><div><b>¿Alguna palabra se nos complicó?</b></div></div>
+      <div class="branch"><div class="chip yes">Sí 🎯 Practicamos esas palabras (3 a 5 min)</div><div class="chip no">No 🎈 ¡Seguimos adelante!</div></div></li>
+    <li class="arrow" aria-hidden="true">⬇</li>
+    <li class="step" style="--c:#C8EBE6"><span class="ico" aria-hidden="true">💬</span><div><b>3. Conversamos del cuento</b><small>Respondemos preguntas con ayuditas · 6 a 8 min</small></div></li>
+    <li class="arrow" aria-hidden="true">⬇</li>
+    <li class="step" style="--c:#FBD3D0"><span class="ico" aria-hidden="true">🧩</span><div><b>4. Armamos el cuento</b><small>Inicio, nudo y desenlace · 4 a 5 min</small></div></li>
+    <li class="arrow" aria-hidden="true">⬇</li>
+    <li class="step" style="--c:#F6D77A"><span class="ico" aria-hidden="true">🎉</span><div><b>5. ¡Celebramos!</b><small>¡Lo lograste! · 1 a 2 min</small></div></li>
+  </ol>
+  <button class="big" type="button" id="guideNext">Continuar a estación 1 y 2</button>
+</section>
+
+<!-- 2. PORTADA -->
+<section id="s-cover" class="screen cover" hidden aria-labelledby="coverH">
+  <h2 id="coverH" tabindex="-1">¡Miremos esta imagen!</h2>
+  <p class="sub">Es la portada de nuestra lectura.</p>
+  <div class="slot cover-slot" id="portadaSlot"></div>
+  <p class="ask">¿Estás listo para leer?</p>
+  <button class="big" type="button" id="readyBtn">Empecemos</button>
+</section>
+
+<!-- 4. ACTIVIDAD -->
+<section id="s-read" class="screen" hidden aria-labelledby="readH">
+  <div class="top"><button class="secondary" type="button" id="exitBtn">← Volver al inicio</button><h2 id="readH" tabindex="-1" style="margin:0;font-size:1.2rem">Lectura repetida</h2><img class="logoImg" alt="" hidden></div>
+  <div class="panel reading-card"><p id="plabel" class="plabel"></p><div id="template" class="reading-template" aria-label="Texto segmentado de la lectura"></div></div>
+  <div class="tutor panel">
+    <div class="metrics"><span class="metric" id="mPass"></span><span class="metric" id="mCard"></span><span class="metric" id="mPrec"></span></div>
+    <p id="feedback" class="feedback"></p>
+    <details><summary>Lista de Refuerzo</summary><p id="reinfList">Aún no hay palabras en la lista.</p></details>
+  </div>
+  <div class="reading-bar" role="group" aria-label="Acciones del docente"><div class="actions">
+    <button id="okBtn" class="success" type="button">Acierto</button>
+    <button id="errBtn" class="danger" type="button">Duda / Error</button>
+    <button id="nextBtn" class="secondary" type="button">Siguiente tarjeta</button>
+  </div></div>
+</section>
+
+<section id="s-drill" class="screen" hidden aria-labelledby="drillH">
+  <div class="panel">
+    <h2 id="drillH" tabindex="-1">Practiquemos palabras 🎯</h2>
+    <p id="drillProg"></p>
+    <p class="drill-word" id="drillWord"></p>
+    <div id="stars" class="stars" role="img" aria-label="0 de 3 aciertos"><span class="star">☆</span><span class="star">☆</span><span class="star">☆</span></div>
+    <p id="drillFb" style="min-height:2rem;color:var(--muted)"></p>
+    <div class="actions">
+      <button id="dOk" class="success" type="button">Correcto</button>
+      <button id="dErr" class="danger" type="button">Error o duda</button>
+      <button id="dSkip" class="secondary" type="button">Omitir palabra</button>
+    </div>
+  </div>
+</section>
+
+<section id="s-done" class="screen" hidden aria-labelledby="doneH">
+  <div class="panel"><h2 id="doneH" tabindex="-1">¡Muy bien! 🎉</h2><p id="doneMsg"></p>
+    <div class="actions"><button id="doneBtn" type="button">Continuar</button><button id="doneMenu" class="secondary" type="button">Volver al inicio</button></div></div>
+</section>
+<section id="s-win" class="screen win" hidden aria-labelledby="winH">
+  <div class="trophy" aria-hidden="true">🌟</div>
+  <h1 id="winH" tabindex="-1">¡Felicitaciones!</h1>
+  <p class="winmsg">¡Leíste el cuento sin errores! Eres un gran lector.<br>Pasaste a la siguiente estación: <strong>preguntas dialogadas</strong>.</p>
+</section>
+<p id="live" class="sr-only" role="status" aria-live="polite"></p>
+</main>
+
+<script>
+'use strict';
+const P=(a,b,c)=>[a,b,c];
+// Los cuentos se definen por párrafos (Inicio, Nudo, Desenlace); cada texto es una tarjeta. Edita o agrega cuentos aquí.
+const stories=[
+ {id:'zorro',icon:'🦊',title:'El zorro y la cosecha de quinua',desc:'Mateo, el campesino, y el zorro Antonio.',paragraphs:P(
+  ['En un valle','de Puno,','Mateo sembraba','quinua dorada.','Cerca vivía','el zorro Antonio,','a quien','no le gustaba','trabajar.'],
+  ['Un día,','Antonio le dijo','a Mateo:','"Si me das','un saco','de quinua,','cuidaré tu chacra','toda la semana".','Mateo aceptó.','Pero cuando','el campesino','se fue,','Antonio se comió','la quinua','y se quedó','dormido.','Los pájaros aprovecharon','y dañaron','las plantas.'],
+  ['Al regresar,','Mateo vio','el engaño','y le dijo:','"La confianza','se gana','con acciones,','no con palabras".','Antonio se sintió','avergonzado','y prometió','reparar su falta.'])},
+ {id:'tortuga',icon:'🐢',title:'La tortuga y el colibrí',desc:'Una amistad entre dos animalitos muy distintos.',paragraphs:P(
+  ['Una tortuga lenta','vivía junto','a un río claro.','Un colibrí veloz','la visitaba','cada mañana.'],
+  ['Un día,','el colibrí dijo:','"Te llevaré','a ver las flores".','La tortuga sonrió','y caminó despacio.','El colibrí esperó','en cada rama.'],
+  ['Al llegar,','vieron un jardín','lleno de colores.','Aprendieron que','los buenos amigos','se esperan.'])},
+ {id:'llama',icon:'🦙',title:'Lucía y la llama Nube',desc:'Una niña busca a su llama entre la niebla.',paragraphs:P(
+  ['En las alturas','de Cusco,','Lucía cuidaba','a su llama','llamada Nube.'],
+  ['Una tarde,','Nube se perdió','entre la niebla.','Lucía caminó','y la llamó','con voz fuerte.','Nube escuchó','y respondió.'],
+  ['Lucía la abrazó','muy contenta.','Desde ese día,','nunca la dejó','sola.'])}
+];
+const LABELS=['PÁRRAFO 1 (INICIO)','PÁRRAFO 2 (NUDO)','PÁRRAFO 3 (DESENLACE)'];
+const $=id=>document.getElementById(id);
+const screens=['home','guide','cover','read','drill','done','win'];
+// Archivo de la siguiente estación (debe estar en la misma carpeta que este HTML)
+const NEXT_FILE='index_comporension_dialogada1.html';
+const goNext=()=>{window.location.href=NEXT_FILE};
+const reinf=new Map(), passReinf=new Map();
+let story=stories[0],cards=[],passNumber=1,cardIndex=0,results=[],wrongWords=[],drillIndex=0,drillStars=0,doneAction=null;
+
+function announce(m){const l=$('live');l.textContent='';setTimeout(()=>{l.textContent=m},25)}
+function show(name){
+  screens.forEach(s=>$('s-'+s).hidden=s!==name);
+  document.body.classList.toggle('reading',name==='read');
+  window.scrollTo(0,0);
+  const h={guide:'guideH',cover:'coverH',read:'readH',drill:'drillH',done:'doneH',win:'winH'}[name]; if(h)$(h).focus();
+}
+
+/* ---------- Imágenes automáticas ----------
+   Coloca en la MISMA carpeta de este HTML los archivos:  logo.png  y  tutor.png
+   (también se aceptan .jpg, .jpeg y .webp). Si no existen, simplemente no se muestran. */
+const IMG_EXTS=['png','jpg','jpeg','webp'];
+function loadAsset(kind){
+  let n=0;const img=new Image();
+  const next=()=>{if(n<IMG_EXTS.length)img.src=`${kind}.${IMG_EXTS[n++]}`};
+  img.onerror=()=>{if(n<IMG_EXTS.length)next();else if(kind==='portada'){const f=document.createElement('span');f.className='fallback';f.textContent='📖';$('portadaSlot').replaceChildren(f)}};
+  img.onload=()=>{
+    const slot=$(kind+'Slot');
+    const alts={logo:'Logo',tutor:'Tu tutor',portada:'Portada de la lectura'};
+    slot.replaceChildren(Object.assign(document.createElement('img'),{src:img.src,alt:alts[kind]}));
+    slot.hidden=false;slot.classList.remove('empty');
+    if(kind==='logo')document.querySelectorAll('.logoImg').forEach(i=>{i.src=img.src;i.hidden=false});
+  };
+  next();
+}
+loadAsset('logo');loadAsset('tutor');loadAsset('portada');
+
+/* ---------- Navegación ---------- */
+$('toGuide').addEventListener('click',()=>show('guide'));
+$('guideBack').addEventListener('click',()=>show('home'));
+$('guideNext').addEventListener('click',()=>show('cover'));
+$('readyBtn').addEventListener('click',()=>{
+  cards=story.paragraphs.flatMap((arr,i)=>arr.map(text=>({paragraph:i+1,label:LABELS[i],text})));
+  reinf.clear();renderReinf();startPass(1);
+});
+$('exitBtn').addEventListener('click',()=>{if(confirm('¿Volver al inicio? Se dejará la lectura.'))show('home')});
+
+/* ---------- Lectura (todo manual) ---------- */
+const words=t=>t.match(/[\p{L}\p{M}]+(?:['’\-][\p{L}\p{M}]+)*/gu)||[];
+function renderReinf(){const l=[...reinf.values()];$('reinfList').textContent=l.length?l.join(', '):'Aún no hay palabras en la lista.'}
+function rememberErrors(text){
+  for(const w of words(text)){const k=w.toLocaleLowerCase('es');if(!reinf.has(k))reinf.set(k,w);if(!passReinf.has(k))passReinf.set(k,w)}
+  renderReinf();
+}
+function precision(){const e=results.filter(r=>r!==null).length,c=results.filter(r=>r===true).length;return e?Math.round(c/e*100)+'%':'0%'}
+function metrics(){$('mPass').textContent=`Lectura ${passNumber} de 4`;$('mCard').textContent=`Tarjeta ${cardIndex+1} de ${cards.length}`;$('mPrec').textContent=`Precisión: ${precision()}`}
+function setFb(msg,cls=''){const f=$('feedback');f.textContent=msg;f.className='feedback '+cls}
+function renderCard(){
+  const card=cards[cardIndex],flow=$('template');
+  $('plabel').textContent=card.label;flow.replaceChildren();
+  cards.forEach((item,i)=>{
+    if(item.paragraph!==card.paragraph)return;
+    const s=document.createElement('span');
+    s.className='segment '+(i<cardIndex?'past':i===cardIndex?'active':'future');
+    s.textContent=item.text;
+    if(i===cardIndex){s.setAttribute('aria-current','step')}else s.setAttribute('aria-hidden','true');
+    flow.append(s,document.createTextNode(' '));
+  });
+  metrics();setFb('Marca tu decisión: Acierto o Duda/Error.');
+  announce(`Tarjeta ${cardIndex+1} de ${cards.length}: ${card.text}`);
+}
+function startPass(n){
+  passNumber=n;cardIndex=0;results=Array(cards.length).fill(null);wrongWords=[];passReinf.clear();
+  show('read');renderCard();
+}
+function recordCorrect(){
+  if(results[cardIndex]===null)results[cardIndex]=true;
+  metrics();moveNext();
+}
+function recordWrong(){
+  if(results[cardIndex]!==null)return;
+  results[cardIndex]=false;rememberErrors(cards[cardIndex].text);metrics();
+  setFb('Duda/error registrada. Se añadió a la Lista de Refuerzo. Pulsa "Siguiente tarjeta" cuando quieras avanzar.','error');
+}
+function moveNext(){
+  if(cardIndex+1>=cards.length){finishPass();return}
+  cardIndex++;renderCard();
+}
+function finishPass(){
+  wrongWords=[...passReinf.values()];
+  if(wrongWords.length){beginDrill();return}
+  // 100 % de precisión (sin errores): no se necesitan más lecturas
+  if(results.some(r=>r===true)){announce('¡Felicitaciones! Pasaste a la siguiente estación.');show('win');return}
+  const last=passNumber>=4;
+  showDone('Lectura terminada',`Precisión de la lectura: ${precision()}.`,
+    last?'Ir a la siguiente estación':`Continuar con Lectura ${passNumber+1}`,last?goNext:()=>startPass(passNumber+1));
+}
+$('okBtn').addEventListener('click',recordCorrect);
+$('errBtn').addEventListener('click',recordWrong);
+$('nextBtn').addEventListener('click',moveNext);
+
+/* ---------- Word Drill (manual, criterio 3/3) ---------- */
+function beginDrill(){drillIndex=0;show('drill');renderDrill();announce(`Word Drill. ${wrongWords.length} palabras.`)}
+function renderDrill(){
+  drillStars=0;$('drillWord').textContent=wrongWords[drillIndex];
+  $('drillProg').textContent=`Palabra ${drillIndex+1} de ${wrongWords.length}`;
+  $('drillFb').textContent='Se necesitan 3 aciertos seguidos.';stars();
+}
+function stars(){
+  document.querySelectorAll('#stars .star').forEach((s,i)=>{const on=i<drillStars;s.textContent=on?'★':'☆';s.classList.toggle('on',on)});
+  $('stars').setAttribute('aria-label',`${drillStars} de 3 aciertos`);
+}
+function nextWord(){drillIndex++;drillIndex>=wrongWords.length?finishDrill():renderDrill()}
+$('dOk').addEventListener('click',()=>{
+  drillStars++;stars();
+  if(drillStars>=3){$('drillFb').textContent='¡Palabra dominada! ⭐';setTimeout(nextWord,450)}
+  else $('drillFb').textContent=`${drillStars} de 3 aciertos seguidos.`;
+});
+$('dErr').addEventListener('click',()=>{drillStars=0;stars();$('drillFb').textContent='Contador reiniciado a 0/3. ¡Intenta otra vez!'});
+$('dSkip').addEventListener('click',nextWord);
+function finishDrill(){
+  const last=passNumber>=4;
+  showDone('¡Buen trabajo con las palabras! 🎯',
+    last?'Terminaste las 4 lecturas y practicaste las palabras de refuerzo.':'Ya pueden volver a leer el cuento completo.',
+    last?'Ir a la siguiente estación':`Reintentar Lectura ${passNumber+1}`,last?goNext:()=>startPass(passNumber+1));
+}
+
+/* ---------- Cierre ---------- */
+function showDone(title,msg,btn,action){
+  $('doneH').textContent=title;$('doneMsg').textContent=msg;
+  $('doneBtn').hidden=!btn;if(btn)$('doneBtn').textContent=btn;
+  doneAction=btn?action:null;show('done');announce(title+' '+msg);
+}
+$('doneBtn').addEventListener('click',()=>{if(doneAction)doneAction()});
+$('doneMenu').addEventListener('click',()=>show('home'));
+
+</script>
+</body>
+</html>
