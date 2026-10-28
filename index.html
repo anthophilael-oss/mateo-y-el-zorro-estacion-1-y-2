@@ -85,6 +85,30 @@ details{padding:.25rem .7rem;border:1px solid var(--border);border-radius:.6rem;
 .tutor-slot img{max-height:min(22rem,80vw)}
 .cover-slot:not(.empty){width:fit-content;max-width:100%}
 .cover-slot img{max-height:min(55vh,32rem)}
+/* inicio: todo en una sola vista, logo a la izquierda */
+.home{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"logo logo" "tutor bubble" "btn btn";gap:.5rem 1.8rem;align-items:center;justify-items:center;padding:.6rem 1.2rem .9rem;margin-top:.4rem}
+.home .logo-slot{grid-area:logo;justify-self:start;margin:0;width:auto}
+.home .logo-slot.empty{width:10rem;height:4.5rem}
+.home .logo-slot img{max-height:4.8rem}
+.home .tutor-slot{grid-area:tutor;margin:0}
+.home .tutor-slot:not(.empty){width:auto}
+.home .tutor-slot img{max-height:min(24rem,calc(100dvh - 14.5rem))}
+.home .bubble{grid-area:bubble;margin:0;padding:.8rem 1.3rem;font-size:1.05rem;line-height:1.5;max-width:none}
+.home .bubble .msg{margin:0 0 .6rem}
+.home .bubble .station{font-size:1.15rem}
+.home .hello{font-size:clamp(1.5rem,3vw,2.1rem);margin:0 0 .5rem}
+.home .bubble::before{top:50%;left:-14px;border-top:0;border-left:3px solid var(--sun);border-bottom:3px solid var(--sun);transform:translateY(-50%) rotate(45deg)}
+.home #toGuide{grid-area:btn;font-size:1.15rem;padding:.7rem 2rem}
+@media(max-width:700px){
+.home{grid-template-columns:1fr;grid-template-areas:"logo" "tutor" "bubble" "btn";gap:.4rem;padding:.5rem .7rem .8rem}
+.home .logo-slot img{max-height:3.2rem}
+.home .tutor-slot img{max-height:22dvh}
+.home .bubble{padding:.6rem .9rem;font-size:.9rem;line-height:1.35}
+.home .bubble .msg{margin:0 0 .35rem}
+.home .bubble .station{font-size:1rem}
+.home .hello{font-size:1.3rem;margin:0 0 .3rem}
+.home .bubble::before{top:-14px;left:50%;border-left:3px solid var(--sun);border-top:3px solid var(--sun);border-bottom:0;transform:translateX(-50%) rotate(45deg)}
+}
 </style>
 </head>
 <body>
